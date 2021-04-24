@@ -1,0 +1,143 @@
+##
+## USEFUL LINKS
+##
+
+https://github.com/git-moss/DrivenByMoss/blob/master/src/main/java/de/mossgrabers/controller/beatstep/BeatstepControllerSetup.java
+
+https://www.untergeek.de/2014/11/taming-arturias-beatstep-sysex-codes-for-programming-via-ipad/
+
+
+#
+# MANAGE LED
+#
+
+sysex:
+
+F0 00 20 6B 7F 42 02 00 10 7n cc F7
+
+where:
+n is the pad number, 0 to F, corresponding to Pad1 to Pad16
+cc is the color:
+00 – black
+01 – red
+10 – blue
+11 – magenta
+
+#
+# SET CC FOR CONTROL BUTTONS
+#
+
+for all the following commands the variable cc can be:
+
+	Start		(0x58)
+	Stop		(0x59)
+	Cntrl/Seq	(0x5A)
+	Ext. Sync	(0x5B)
+	Recall		(0x5C)
+	Store		(0x5D)
+	Shift		(0x5E)
+	Chan		(0x5F)
+
+
+## MMC MODE (VV=7)
+
+Invoked by 
+	
+	F0 00 20 6B 7F 42 02 00 01 cc 07 F7.
+
+Setting the parameter:
+
+	MMC command: F0 00 20 6B 7F 42 02 00 03 cc vv F7 
+
+with vv:
+
+	1=Stop
+	2=Play
+	3=Deferred Play
+	4=FastForward
+	5=Rewind
+	6=Record Strobe
+	7=Record Exit
+	8=Record Ready
+	9=Pause
+	10=Eject
+	11=Chase
+	12=InList Reset
+
+## CC SWITCH MODE (VV=8)
+
+Invoked by
+
+	F0 00 20 6B 7F 42 02 00 01 cc 08 F7
+
+Setting the parameters: 
+
+Send 
+	
+	F0 00 20 6B 7F 42 02 00 
+
+and then…
+
+	…02 cc vv F7 to set MIDI channel (vv: channel-1, 0-15)
+	…03 cc vv F7 to set the CC (vv from 0-127)
+	…04 cc vv F7 to set the Off value (vv from 0-127)
+	…05 cc vv F7 to set the On value (vv from 0-127)
+	…06 cc vv F7 to set the behaviour: 0=Toggle, 1=Gate
+	Toggle means that one push switches the button on, the next switches it on, while Gate sends On as long as the button is pressed.
+
+## SILENT CC SWITCH MODE (VV=1)
+
+Works just like CC, but doesn’t light up the (red) pad LED while it is pressed, unlike the CC (vv=8) mode. Use this if you want to use the LED for feedback. (Found out by Ricard Wanderlöf.)
+
+Invoked by
+
+	F0 00 20 6B 7F 42 02 00 01 cc 01 F7
+
+and then…
+
+	…02 cc vv F7 to set MIDI channel (vv: channel-1, 0-15)
+	…03 cc vv F7 to set the CC (vv from 0-127)
+	…04 cc vv F7 to set the Off value (vv from 0-127)
+	…05 cc vv F7 to set the On value (vv from 0-127)
+	…06 cc vv F7 to set the behaviour: 0=Toggle, 1=Gate
+	Toggle means that one push switches the button on, the next switches it on, while Gate sends On as long as the button is pressed.
+
+## NOTE MODE (VV=9)
+
+Invoked by 
+
+	F0 00 20 6B 7F 42 02 00 01 cc 09 F7.
+
+Setting the parameters: 
+
+Send 
+
+	F0 00 20 6B 7F 42 02 00 
+
+and then…
+
+	…02 cc vv F7 to set MIDI channel (vv: channel-1, 0-15)
+	…03 cc vv F7 to set the note (vv from 0-127, C0=18)
+	…06 cc vv F7 to set the behaviour: 0=Toggle, 1=Gate
+
+Toggle means that one push switches the button on, the next switches it on, while Gate sends On as long as the button is pressed.
+Aftertouch (channel pressure) is transmitted in Gate mode only. In Toggle mode, velocity is transmitted with Note On and Note Off messages.
+
+## PROGRAM CHANGE MODE (VV=0B)
+
+Invoked by 
+
+	F0 00 20 6B 7F 42 02 00 01 cc 0B F7.
+
+Setting the parameters: 
+
+Send 
+
+	F0 00 20 6B 7F 42 02 00
+
+and then…
+
+	…02 cc vv F7 to set MIDI channel (vv: channel-1, 0-15)
+	…03 cc vv F7 to set the actual Program Change value (0-127)
+	…04 cc vv F7 to set the Bank LSB (0-127)
+	…05 cc vv F7 to set the Bank MSB (0-127)
