@@ -1,10 +1,13 @@
 # Global parameter
 
-- fine adjust
+- track selector:
+	- selezionabile con shift + pad(1-16)
+	- prevedere gestione di più banchi
 
 # Input section
 
 - input gain
+- inversione di fase
 - high cut
 - low cut
 
