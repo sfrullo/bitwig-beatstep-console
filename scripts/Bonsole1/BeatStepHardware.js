@@ -32,6 +32,7 @@ BeatStepHardware.prototype._initMods = function() {
         modHex = uint8ToHex(mod.id);
         ccHex = uint8ToHex(mod.cc);
         this.output.sendSysex(`F0 00 20 6B 7F 42 02 00 01 ${modHex} 08 F7`);       // set CC SWITCH MODE
+        this.output.sendSysex(`F0 00 20 6B 7F 42 02 00 02 ${modHex} 00 F7`);       // to set MIDI channel (vv: channel-1, 0-15)
         this.output.sendSysex(`F0 00 20 6B 7F 42 02 00 03 ${modHex} ${ccHex} F7`); // set CC value
         this.output.sendSysex(`F0 00 20 6B 7F 42 02 00 06 ${modHex} 01 F7`);       // set Gate mode
     }
@@ -63,22 +64,22 @@ BeatStepHardware.prototype._initEncoders = function() {
 
 BeatStepHardware.prototype.testLed = function() {
     for (var i = 0; i < 16; i++) {
-        this.LedOn(i, 'red');
+        this.ledOn(i, 'red');
         sleep(50);
     }
 
     for (var i = 16; i >= 0; i--) {
-        this.LedOn(i, 'blue');
+        this.ledOn(i, 'blue');
         sleep(50);
     }
 
     for (var i = 0; i < 16; i++) {
-        this.LedOn(i, 'magenta');
+        this.ledOn(i, 'magenta');
         sleep(50);
     }
 
     for (var i = 0; i < 16; i++) {
-        this.LedOff(i);
+        this.ledOff(i);
         sleep(50);
     }
 }
@@ -89,12 +90,12 @@ BeatStepHardware.prototype._getLedSysExMsg = function(pad, color){
     return `F0 00 20 6B 7F 42 02 00 10 ${hexPad} ${hexColor} F7`;
 };
 
-BeatStepHardware.prototype.LedOn = function(pad, color){
+BeatStepHardware.prototype.ledOn = function(pad, color){
     sysExMsg = this._getLedSysExMsg(pad, color)
     this.output.sendSysex(sysExMsg);
 };
 
-BeatStepHardware.prototype.LedOff = function(pad){
+BeatStepHardware.prototype.ledOff = function(pad){
     sysExMsg = this._getLedSysExMsg(pad, 'black')
     this.output.sendSysex(sysExMsg);
 };
