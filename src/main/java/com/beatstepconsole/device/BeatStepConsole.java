@@ -145,14 +145,14 @@ public class BeatStepConsole {
 
 	private void testLed() {
 		try {
-			
+
 			for (int color : Color.getColorList()) {
 				for (DeviceElement pad : PADS) {
 					this.ledOn(pad, color);
 					TimeUnit.MILLISECONDS.sleep(50);
 				}
 			}
-			
+
 		} catch (InterruptedException e) {
 			this.host.println(e.toString());
 

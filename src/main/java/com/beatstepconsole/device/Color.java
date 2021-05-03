@@ -1,7 +1,5 @@
 package com.beatstepconsole.device;
 
-import java.util.ArrayList;
-
 public class Color {
     public static final int BLACK   = 0x00;
     public static final int RED     = 0x01;
