@@ -4,9 +4,15 @@ import java.util.concurrent.TimeUnit;
 
 import com.beatstepconsole.handlers.MidiHandler;
 import com.bitwig.extension.controller.api.ControllerHost;
+import com.bitwig.extension.controller.api.CursorTrack;
+import com.bitwig.extension.controller.api.HardwareButton;
 import com.bitwig.extension.controller.api.HardwareSurface;
 import com.bitwig.extension.controller.api.MidiIn;
 import com.bitwig.extension.controller.api.MidiOut;
+import com.bitwig.extension.controller.api.MultiStateHardwareLight;
+import com.bitwig.extension.controller.api.RelativeHardwareKnob;
+import com.bitwig.extension.controller.api.Track;
+import com.bitwig.extension.controller.api.TrackBank;
 
 public class BeatStepConsole {
 
@@ -68,16 +74,63 @@ public class BeatStepConsole {
 	private MidiIn input;
 	private MidiOut output;
 
+	private TrackBank trackBank;
+	private CursorTrack cursorTrack;
+
 	public BeatStepConsole(ControllerHost host) {
 
 		this.host = host;
-
-		final HardwareSurface surface = host.createHardwareSurface();
 
 		this.input = host.getMidiInPort(0);
 		this.output = host.getMidiOutPort(0);
 
 		this.input.setMidiCallback(new MidiHandler(host));
+
+		final HardwareSurface surface = host.createHardwareSurface();
+
+		this.trackBank = host.createTrackBank(8, 0, 0);
+		this.cursorTrack = host.createCursorTrack("BEATSTEP_CURSOR_TRACK", "Beatstep Cursor Track", 0, 0, true);
+
+		this.trackBank.followCursorTrack(cursorTrack);
+
+		for (int i = 0; i < this.trackBank.getSizeOfBank(); i++) {
+
+			Track track = this.trackBank.getItemAt(i);
+
+			track.volume().markInterested();
+			track.volume().setIndication(true);
+
+			track.pan().markInterested();
+			track.pan().setIndication(true);
+
+			track.mute().markInterested();
+			track.solo().markInterested();
+
+			// Encoders Volume
+			DeviceElement encoderVol = ENCODERS[i];
+			RelativeHardwareKnob hwKnobVol = surface.createRelativeHardwareKnob("ENCODER_" + i);
+			hwKnobVol.setAdjustValueMatcher(this.input.createRelativeBinOffsetCCValueMatcher(0, encoderVol.getCc(), 127));
+			hwKnobVol.setBinding(track.volume());
+
+			// Encoders Pan
+			DeviceElement encoderPan = ENCODERS[i + 8];
+			RelativeHardwareKnob hwKnobPan = surface.createRelativeHardwareKnob("ENCODER_" + i + 8);
+			hwKnobPan.setAdjustValueMatcher(this.input.createRelativeBinOffsetCCValueMatcher(0, encoderPan.getCc(), 127));
+			hwKnobPan.setBinding(track.pan());
+
+			// Pads Solo
+			DeviceElement padSolo = PADS[i];
+			HardwareButton hwPadSolo = surface.createHardwareButton("PAD_" + i);
+			hwPadSolo.releasedAction().setActionMatcher(this.input.createCCActionMatcher(0, padSolo.getCc(), 0));
+			hwPadSolo.releasedAction().setBinding(track.solo());
+
+			// Pads Mute
+			DeviceElement padMute = PADS[i + 8];
+			HardwareButton hwPadMute = surface.createHardwareButton("PAD_" + i + 8);
+			hwPadMute.releasedAction().setActionMatcher(this.input.createCCActionMatcher(0, padMute.getCc(), 0));
+			hwPadMute.releasedAction().setBinding(track.mute());
+
+		}
 
 		this.initialize();
 		this.testLed();

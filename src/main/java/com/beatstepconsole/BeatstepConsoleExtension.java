@@ -16,7 +16,7 @@ public class BeatstepConsoleExtension extends ControllerExtension
     {
         final ControllerHost host = getHost();
 
-        host.println("Initialized");
+        host.showPopupNotification("Initialized");
 
         beatStepConsole = new BeatStepConsole(host);
 
@@ -25,13 +25,13 @@ public class BeatstepConsoleExtension extends ControllerExtension
     @Override
     public void exit()
     {
-        getHost().println("beatstep-console Exited");
+        getHost().showPopupNotification("beatstep-console Exited");
     }
 
     @Override
     public void flush()
     {
-        getHost().println("flush called");
+        // getHost().println("flush called");
     }
 
     BeatStepConsole beatStepConsole;
