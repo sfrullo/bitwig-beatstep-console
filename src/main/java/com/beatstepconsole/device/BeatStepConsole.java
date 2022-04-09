@@ -79,9 +79,10 @@ public class BeatStepConsole {
 
 		final HardwareSurface surface = host.createHardwareSurface();
 
-		this.trackBank = host.createTrackBank(8, 0, 0);
+		this.trackBank = host.createTrackBank(16, 0, 0);
 		this.cursorTrack = host.createCursorTrack("BEATSTEP_CURSOR_TRACK", "Beatstep Cursor Track", 0, 0, true);
 
+		
 		this.trackBank.followCursorTrack(cursorTrack);
 
 		for (int i = 0; i < this.trackBank.getSizeOfBank(); i++) {
@@ -91,36 +92,26 @@ public class BeatStepConsole {
 			track.volume().markInterested();
 			track.volume().setIndication(true);
 
-			track.pan().markInterested();
-			track.pan().setIndication(true);
-
-			track.mute().markInterested();
-			track.solo().markInterested();
-
 			// Encoders Volume
 			DeviceElement encoderVol = ENCODERS[i];
-			RelativeHardwareKnob hwKnobVol = surface.createRelativeHardwareKnob("ENCODER_" + i);
+			RelativeHardwareKnob hwKnobVol = surface.createRelativeHardwareKnob("ENCODER_" + i + "_vol");
 			hwKnobVol.setAdjustValueMatcher(this.input.createRelativeBinOffsetCCValueMatcher(0, encoderVol.getCc(), 127));
 			hwKnobVol.setBinding(track.volume());
 
-			// Encoders Pan
-			DeviceElement encoderPan = ENCODERS[i + 8];
-			RelativeHardwareKnob hwKnobPan = surface.createRelativeHardwareKnob("ENCODER_" + i + 8);
-			hwKnobPan.setAdjustValueMatcher(this.input.createRelativeBinOffsetCCValueMatcher(0, encoderPan.getCc(), 127));
-			hwKnobPan.setBinding(track.pan());
+		}
+		
+		for (int i = 0; i < this.trackBank.getSizeOfBank(); i++) {
+			Track track = this.trackBank.getItemAt(i);
+			
+			DeviceElement pad = PADS[i];
+			HardwareButton hwPad = surface.createHardwareButton("PADS" + i + "_TRACK_SELECTOR");
+			hwPad.pressedAction().setPressureActionMatcher(this.input.createAbsoluteCCValueMatcher(0, pad.getCc()));
 
-			// Pads Solo
-			DeviceElement padSolo = PADS[i];
-			HardwareButton hwPadSolo = surface.createHardwareButton("PAD_" + i);
-			hwPadSolo.releasedAction().setActionMatcher(this.input.createCCActionMatcher(0, padSolo.getCc(), 0));
-			hwPadSolo.releasedAction().setBinding(track.solo());
-
-			// Pads Mute
-			DeviceElement padMute = PADS[i + 8];
-			HardwareButton hwPadMute = surface.createHardwareButton("PAD_" + i + 8);
-			hwPadMute.releasedAction().setActionMatcher(this.input.createCCActionMatcher(0, padMute.getCc(), 0));
-			hwPadMute.releasedAction().setBinding(track.mute());
-
+						
+			DoubleConsumer printpad = asd -> host.println(String.format("%f", asd));
+			Supplier<String> supplier = () -> "PAD";
+			
+			hwPad.pressedAction().addBinding(this.host.createAction(printpad, supplier));
 		}
 
 		this.initialize();
