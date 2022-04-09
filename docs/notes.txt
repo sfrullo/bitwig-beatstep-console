@@ -1,0 +1,12 @@
+##
+## DEVICE ID
+##
+
+Main Container: c86d21fb-d544-4daf-a1bf-57de22aa320c
+
+    Input: c86d21fb-d544-4daf-a1bf-57de22aa320c
+    Dynamic Shape: c86d21fb-d544-4daf-a1bf-57de22aa320c
+    EQ: c86d21fb-d544-4daf-a1bf-57de22aa320c
+    Compressor: c86d21fb-d544-4daf-a1bf-57de22aa320c
+    Output: c86d21fb-d544-4daf-a1bf-57de22aa320c
+

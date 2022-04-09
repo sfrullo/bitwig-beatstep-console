@@ -1,8 +1,8 @@
 package com.beatstepconsole;
 
-import com.bitwig.extension.controller.api.ControllerHost;
 import com.beatstepconsole.device.BeatStepConsole;
 import com.bitwig.extension.controller.ControllerExtension;
+import com.bitwig.extension.controller.api.ControllerHost;
 
 public class BeatstepConsoleExtension extends ControllerExtension
 {

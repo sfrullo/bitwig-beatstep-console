@@ -1,18 +1,9 @@
 package com.beatstepconsole.device;
 
-import java.util.concurrent.TimeUnit;
-
 import com.beatstepconsole.handlers.MidiHandler;
-import com.bitwig.extension.controller.api.ControllerHost;
-import com.bitwig.extension.controller.api.CursorTrack;
-import com.bitwig.extension.controller.api.HardwareButton;
-import com.bitwig.extension.controller.api.HardwareSurface;
-import com.bitwig.extension.controller.api.MidiIn;
-import com.bitwig.extension.controller.api.MidiOut;
-import com.bitwig.extension.controller.api.MultiStateHardwareLight;
-import com.bitwig.extension.controller.api.RelativeHardwareKnob;
-import com.bitwig.extension.controller.api.Track;
-import com.bitwig.extension.controller.api.TrackBank;
+import com.bitwig.extension.controller.api.*;
+
+import java.util.concurrent.TimeUnit;
 
 public class BeatStepConsole {
 
@@ -139,6 +130,7 @@ public class BeatStepConsole {
 
 	private void initialize() {
 
+		this.sendSysex("50 0B 00"); // set global MIDI Channel to 1
 		this.sendSysex("41 04 00"); // set slow encoders acceleration
 		this.sendSysex("41 03 03"); // set pad velocity curve to full
 
@@ -173,7 +165,7 @@ public class BeatStepConsole {
 			this.sendSysex(String.format("03 %02x %02x", encoderHex, ccHex)); // set the CC number that is used
 			this.sendSysex(String.format("04 %02x 00", encoderHex)); // set the lowest possible value
 			this.sendSysex(String.format("05 %02x FF", encoderHex)); // set the highest possible value
-			this.sendSysex(String.format("06 %02x 01", encoderHex)); // set behaviour: 0=Absolute, 1-3=Relative mode
+			this.sendSysex(String.format("06 %02x 02", encoderHex)); // set behaviour: 0=Absolute, 1-3=Relative mode
 
 		}
 

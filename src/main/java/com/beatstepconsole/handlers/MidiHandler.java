@@ -11,7 +11,9 @@ public class MidiHandler implements ShortMidiDataReceivedCallback {
 	public MidiHandler(ControllerHost host) {
 		this.host = host;
 	}
-	
+
+
+
 	@Override
 	public void midiReceived(int statusByte, int data1, int data2) {
 		ShortMidiMessage msg = new ShortMidiMessage(statusByte, data1, data2);

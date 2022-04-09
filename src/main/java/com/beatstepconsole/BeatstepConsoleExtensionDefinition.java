@@ -1,10 +1,11 @@
 package com.beatstepconsole;
-import java.util.UUID;
 
 import com.bitwig.extension.api.PlatformType;
 import com.bitwig.extension.controller.AutoDetectionMidiPortNamesList;
 import com.bitwig.extension.controller.ControllerExtensionDefinition;
 import com.bitwig.extension.controller.api.ControllerHost;
+
+import java.util.UUID;
 
 public class BeatstepConsoleExtensionDefinition extends ControllerExtensionDefinition
 {
@@ -53,7 +54,7 @@ public class BeatstepConsoleExtensionDefinition extends ControllerExtensionDefin
    @Override
    public int getRequiredAPIVersion()
    {
-      return 13;
+      return 14;
    }
 
    @Override
@@ -80,13 +81,13 @@ public class BeatstepConsoleExtensionDefinition extends ControllerExtensionDefin
       {
          // TODO: Set the correct names of the ports for auto detection on Windows platform here
          // and uncomment this when port names are correct.
-         // list.add(new String[]{"Input Port 0"}, new String[]{"Output Port 0"});
+         list.add(new String[]{"Input Port 0"}, new String[]{"Output Port 0"});
       }
       else if (platformType == PlatformType.LINUX)
       {
          // TODO: Set the correct names of the ports for auto detection on Windows platform here
          // and uncomment this when port names are correct.
-         // list.add(new String[]{"Input Port 0"}, new String[]{"Output Port 0"});
+         list.add(new String[]{"Arturia BeatStep MIDI 1"}, new String[]{"Arturia BeatStep MIDI 1"});
       }
    }
 
